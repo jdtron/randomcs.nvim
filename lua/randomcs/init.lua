@@ -6,9 +6,25 @@ local M = {
 ---Setup randomcs
 ---@param cfg table|nil
 ---@param schemes table|nil
+---@return table
 M.setup = function(cfg, schemes)
     cfg = cfg or {}
     M.config = M.default_config(cfg)
+
+    if M.config.default then
+        vim.cmd.colorscheme(M.config.default)
+    end
+
+    for _, scheme_name in ipairs(schemes or {}) do
+        M.register(scheme_name)
+    end
+
+    return M
+end
+
+---Apply color scheme
+---@param scheme string
+M.apply = function(scheme)
     if not M.config.enabled then
         if M.config.default then
             vim.cmd.colorscheme(M.config.default)
@@ -16,11 +32,7 @@ M.setup = function(cfg, schemes)
         return
     end
 
-    for _, scheme_name in ipairs(schemes or {}) do
-        M.register(scheme_name)
-    end
-
-    local scheme = M.random_scheme()
+    scheme = scheme or M.random_scheme()
     if not scheme then
         return
     end
@@ -30,6 +42,17 @@ M.setup = function(cfg, schemes)
         local timer = vim.uv.new_timer()
         timer:start(500, 0, vim.schedule_wrap(function()
             vim.notify("Random " .. M.config.mode .. " colorscheme: " .. scheme)
+        end))
+    end
+end
+
+---Apply default color scheme
+M.apply_default = function()
+    vim.cmd.colorscheme(M.config.default)
+    if M.config.notify then
+        local timer = vim.uv.new_timer()
+        timer:start(500, 0, vim.schedule_wrap(function()
+            vim.notify("Applied default colorscheme " .. M.config.default)
         end))
     end
 end

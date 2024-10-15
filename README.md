@@ -62,3 +62,16 @@ Or make the color scheme plugins register themself on init. Example with [Lazy.n
     end
 },
 ```
+
+## Apply Color Scheme
+Call `require('randomcs').apply()` to apply a color scheme.  
+This can be done either chained with `setup` or with your own hooks.
+```
+require('randomcs').setup({ ... }).apply()
+```
+
+There are also user commands available:
+- `Randomcs`
+  Apply a random color scheme (same as `.apply()`)
+- `RandomcsDefault`
+  Apply the default color scheme
